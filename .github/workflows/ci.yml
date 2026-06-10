@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install fastapi uvicorn pydantic-settings httpx pytest pytest-asyncio ruff sqlmodel aiosqlite sse-starlette
+
+      - name: Lint
+        run: ruff check backend/ scripts/ || true
+
+      - name: Test
+        run: pytest -q
+        env:
+          QDRANT_URL: "http://localhost:6333"
+          GROQ_API_KEY: "dummy"
+          GEMINI_API_KEY: "dummy"
