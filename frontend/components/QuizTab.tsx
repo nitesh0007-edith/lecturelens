@@ -24,7 +24,10 @@ function MCQCard({ q, idx }: { q: MCQQuestion; idx: number }) {
         <span className="text-zinc-400 mr-1">Q{idx + 1}.</span> {q.question}
       </p>
       <div className="space-y-1.5">
-        {q.options.map((opt) => {
+        {(Array.isArray(q.options)
+          ? q.options
+          : Object.entries(q.options as Record<string, string>).map(([key, text]) => ({ key, text }))
+        ).map((opt) => {
           const isCorrect = opt.key === q.answer;
           const isSelected = opt.key === selected;
           let cls = "text-left w-full text-sm px-3 py-2 rounded-lg border transition-colors ";
@@ -73,7 +76,7 @@ function ShortAnswerCard({ q, idx }: { q: ShortAnswerQuestion; idx: number }) {
           Show answer
         </button>
       ) : (
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-700/50 rounded p-2">{q.answer}</p>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-700/50 rounded p-2">{q.model_answer ?? q.answer}</p>
       )}
     </div>
   );

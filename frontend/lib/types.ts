@@ -44,14 +44,16 @@ export interface MCQOption {
 
 export interface MCQQuestion {
   question: string;
-  options: MCQOption[];
+  options: MCQOption[] | Record<string, string>;
   answer: string;
   explanation?: string;
 }
 
 export interface ShortAnswerQuestion {
   question: string;
-  answer: string;
+  answer?: string;
+  model_answer?: string;
+  marks?: number;
 }
 
 export type QuizQuestion = MCQQuestion | ShortAnswerQuestion;

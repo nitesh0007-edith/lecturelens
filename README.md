@@ -1,3 +1,12 @@
+---
+title: LectureLens
+emoji: 📚
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # LectureLens
 
 **Hybrid RAG learning copilot for university course materials.**
