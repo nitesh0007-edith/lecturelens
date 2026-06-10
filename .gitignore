@@ -12,6 +12,7 @@ data/chunks.jsonl
 data/qdrant_local/
 data/answer_cache.db
 eval/relabel_cache.json
+eval/rewrite_cache.json
 *.egg-info/
 dist/
 build/

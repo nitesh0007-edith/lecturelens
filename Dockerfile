@@ -21,16 +21,16 @@ RUN python -c "from sentence_transformers import CrossEncoder; CrossEncoder('cro
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
 COPY eval/ ./eval/
-# BM25 indexes pre-built by `make ingest-demo` — committed to repo
-COPY data/bm25_indexes/ ./data/bm25_indexes/
 
+RUN chmod +x /app/scripts/startup.sh
 RUN chown -R appuser:appuser /app
 USER appuser
 
 ENV PYTHONPATH=/app/backend
-# QDRANT_URL is injected via HF Spaces secret — do not hardcode here
+# QDRANT_URL / QDRANT_API_KEY injected via HF Spaces secrets — do not hardcode here
 
 # HF Spaces requires port 7860
 EXPOSE 7860
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]
+# startup.sh: rebuilds BM25 index from Qdrant if not cached, then starts uvicorn
+CMD ["/bin/bash", "/app/scripts/startup.sh"]
