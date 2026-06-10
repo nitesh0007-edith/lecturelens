@@ -6,7 +6,6 @@ __pycache__/
 .ruff_cache/
 data/UofGMScDS/
 data/workspaces/
-data/bm25_indexes/
 data/lecturelens.db
 data/graph.db
 data/chunks.jsonl

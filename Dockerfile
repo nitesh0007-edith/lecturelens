@@ -16,20 +16,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Pre-download models at build time — eliminates cold-start latency
 RUN python -m spacy download en_core_web_sm
 RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('BAAI/bge-small-en-v1.5').embed(['warmup']))"
-RUN python -c "from fastembed import TextCrossEncoder; list(TextCrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2').rerank('q',['d']))" || true
+RUN python -c "from sentence_transformers import CrossEncoder; CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')" || true
 
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
 COPY eval/ ./eval/
-# Copy pre-built indexes and chunks (produced by `make ingest-demo`)
+# BM25 indexes pre-built by `make ingest-demo` — committed to repo
 COPY data/bm25_indexes/ ./data/bm25_indexes/
-COPY data/chunks.jsonl ./data/chunks.jsonl
 
 RUN chown -R appuser:appuser /app
 USER appuser
 
 ENV PYTHONPATH=/app/backend
-ENV QDRANT_URL=local
+# QDRANT_URL is injected via HF Spaces secret — do not hardcode here
 
 # HF Spaces requires port 7860
 EXPOSE 7860
